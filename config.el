@@ -47,7 +47,7 @@
   (require 'tramp)
   (projectile-mode +1))
 
-(setq projectile-project-search-path '(("~/Desktop/compPro/" . 2) ("~/Desktop/rn.tmp" . 2) ("~/Desktop/react.tmp" . 2)))
+(setq projectile-project-search-path '(("~/Desktop/compPro/" . 2) ("~/Desktop/rn.tmp" . 2) ("~/Desktop/react.tmp" . 2) ("~/Desktop/BE.tmp" . 2)))
 
 ;; Whenever you reconfigure a package, make sure to wrap your config in an
 ;; `after!' block, otherwise Doom's defaults may override your settings. E.g.
@@ -80,3 +80,38 @@
 ;;
 ;; You can also try 'gd' (or 'C-c c d') to jump to their definition and see how
 ;; they are implemented.
+;;(setq-hook! 'js-mode-hook +format-with-lsp nil)
+;;(setq-hook! 'js-mode-hook +format-with :none)
+;;(add-hook 'js-mode-hook 'prettier-js-mode)
+
+(use-package python-mode
+  :ensure t
+  :hook (python-mode . lsp-deferred)
+  :custom
+  ;; NOTE: Set these if Python 3 is called "python3" on your system!
+  (python-shell-interpreter "python3")
+  (dap-python-executable "python3")
+  (dap-python-debugger 'debugpy)
+  :config
+  (require 'dap-python))
+
+(use-package company
+  :after lsp-mode
+  :hook (lsp-mode . company-mode)
+  :bind (:map company-active-map
+         ("<tab>" . company-complete-selection))
+        (:map lsp-mode-map
+         ("<tab>" . company-indent-or-complete-common))
+  :custom
+  (company-minimum-prefix-length 1)
+  (company-idle-delay 0.0))
+
+(use-package company-box
+  :hook (company-mode . company-box-mode))
+
+(use-package pyvenv
+  :config
+  (pyvenv-mode 1))
+
+(setq python-shell-interpreter "python3"
+      python-shell-interpreter-args "-i")
